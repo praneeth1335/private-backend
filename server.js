@@ -6,6 +6,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import validator from "validator";
 import connectDB from "./config/db.js";
+
 import dotenv from "dotenv"; // Add dotenv import
 
 // Initialize dotenv to load .env file
@@ -41,6 +42,9 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         process.env.CLIENT_URL || "http://localhost:5173",
+        "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app/", // your frontend Render URL
+        "https://securechat1335.vercel.app/",
+        "https://private-backend-k0py.onrender.com", // backend itself
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -80,27 +84,33 @@ app.get("/info", (req, res) => {
     port: process.env.PORT || 5000,
   });
 });
-
+const allowedOrigins = [
+  process.env.CLIENT_URL || "http://localhost:5173",
+  "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app/", // your frontend Render URL
+  "https://securechat1335.vercel.app/",
+  "https://private-backend-k0py.onrender.com", // backend itself
+];
 const server = createServer(app);
-
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.includes("onrender.com")
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST"],
+  credentials: true,
+};
 // Socket.IO configuration
 const io = new Server(server, {
-  cors: {
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        process.env.CLIENT_URL || "http://localhost:5173",
-        "https://private-frontend-xyz.onrender.com", // your frontend Render URL
-        "https://private-backend-k0py.onrender.com", // backend itself
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: corsOptions,
+  transports: ["websocket", "polling"],
+  allowEIO3: true,
 });
 
 // In-memory storage for rooms
@@ -301,10 +311,7 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, "0.0.0.0", () => {
-  console.log("🚀 Secure chat server running!");
-  console.log(`📍 Listening on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
 // Handle graceful shutdown
 process.on("SIGINT", () => {
