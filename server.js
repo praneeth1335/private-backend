@@ -89,6 +89,8 @@ const io = new Server(server, {
     origin: (origin, callback) => {
       const allowedOrigins = [
         process.env.CLIENT_URL || "http://localhost:5173",
+        "https://private-frontend-xyz.onrender.com", // your frontend Render URL
+        "https://private-backend-k0py.onrender.com", // backend itself
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
