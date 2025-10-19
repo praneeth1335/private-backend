@@ -42,8 +42,8 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         process.env.CLIENT_URL || "http://localhost:5173",
-        "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app/", // your frontend Render URL
-        "https://securechat1335.vercel.app/",
+        "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app", // your frontend Render URL
+        "https://securechat1335.vercel.app",
         "https://private-backend-k0py.onrender.com", // backend itself
       ];
       if (!origin || allowedOrigins.includes(origin)) {
@@ -86,8 +86,8 @@ app.get("/info", (req, res) => {
 });
 const allowedOrigins = [
   process.env.CLIENT_URL || "http://localhost:5173",
-  "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app/", // your frontend Render URL
-  "https://securechat1335.vercel.app/",
+  "https://private-frontend-kov9nbd7m-bodapati-sai-praneeths-projects.vercel.app", // your frontend Render URL
+  "https://securechat1335.vercel.app",
   "https://private-backend-k0py.onrender.com", // backend itself
 ];
 const server = createServer(app);
